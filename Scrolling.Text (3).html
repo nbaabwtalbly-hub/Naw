@@ -1,0 +1,466 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نظام إدارة الموارد البشرية</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- قسم الترحيب -->
+<div class="card" id="welcomeSection">
+  <h1>مرحبًا بك في نظام إدارة الموارد البشرية</h1>
+  <img src="https://images.unsplash.com/photo-1551434678-e076c223a692" alt="واجهة النظام">
+
+  <!-- المشاكل والحلول -->
+  <div class="problems">
+    <h2>المشاكل التي يحلها النظام</h2>
+    <ul>
+      <li>صعوبة تتبع حضور وانصراف الموظفين يدويًا.</li>
+      <li>تأخر تسجيل الإجازات وإدارتها بشكل غير منظم.</li>
+      <li>حساب الرواتب والبدلات بشكل يدوي ومرهق.</li>
+      <li>متابعة أداء الموظفين والتقييم بشكل غير واضح.</li>
+      <li>توزيع المهام ومراقبة الإنتاجية بدون نظام مركزي.</li>
+    </ul>
+  </div>
+  
+  <button onclick="enterSystem()">الدخول إلى النظام</button>
+</div>
+
+<!-- قسم النظام -->
+<div id="systemSection">
+
+  <!-- الموظفين -->
+  <div class="section" id="employeesSection">
+    <h2>الموظفين</h2>
+    <form id="employeeForm">
+      <input type="text" id="name" placeholder="اسم الموظف" required>
+      <input type="email" id="email" placeholder="البريد الإلكتروني" required>
+      <button type="submit">➕ إضافة موظف</button>
+    </form>
+
+    <table>
+      <thead>
+        <tr>
+          <th>الاسم</th>
+          <th>البريد</th>
+          <th>حذف</th>
+        </tr>
+      </thead>
+      <tbody id="employeeTable"></tbody>
+    </table>
+  </div>
+
+  <!-- الحضور -->
+  <div class="section" id="attendanceSection">
+    <h2>تتبع الحضور</h2>
+    <form id="attendanceForm">
+      <input type="text" id="employeeName" placeholder="اسم الموظف" required>
+      <input type="date" id="date" required>
+      <select id="status">
+        <option value="حاضر">حاضر</option>
+        <option value="غائب">غائب</option>
+      </select>
+      <button type="submit">➕ إضافة حضور</button>
+    </form>
+
+    <table>
+      <thead>
+        <tr>
+          <th>الاسم</th>
+          <th>التاريخ</th>
+          <th>الحالة</th>
+          <th>حذف</th>
+        </tr>
+      </thead>
+      <tbody id="attendanceTable"></tbody>
+    </table>
+  </div>
+
+  <!-- الإجازات -->
+  <div class="section" id="leaveSection">
+    <h2>الإجازات</h2>
+    <form id="leaveForm">
+      <input type="text" id="employeeNameLeave" placeholder="اسم الموظف" required>
+      <input type="date" id="leaveDate" required>
+      <select id="leaveType">
+        <option value="إجازة سنوية">إجازة سنوية</option>
+        <option value="إجازة مرضية">إجازة مرضية</option>
+      </select>
+      <button type="submit">➕ إضافة إجازة</button>
+    </form>
+
+    <table>
+      <thead>
+        <tr>
+          <th>الاسم</th>
+          <th>تاريخ الإجازة</th>
+          <th>نوع الإجازة</th>
+          <th>حذف</th>
+        </tr>
+      </thead>
+      <tbody id="leaveTable"></tbody>
+    </table>
+  </div>
+
+  <!-- تقييم الأداء -->
+  <div class="section" id="performanceSection">
+    <h2>تقييم أداء الموظفين</h2>
+    <form id="performanceForm">
+      <input type="text" id="employeeNamePerformance" placeholder="اسم الموظف" required>
+      <select id="performanceRating" required>
+        <option value="ممتاز">ممتاز</option>
+        <option value="جيد">جيد</option>
+        <option value="متوسط">متوسط</option>
+        <option value="ضعيف">ضعيف</option>
+      </select>
+      <button type="submit">➕ إضافة تقييم</button>
+    </form>
+
+    <table>
+      <thead>
+        <tr>
+          <th>اسم الموظف</th>
+          <th>التقييم</th>
+          <th>حذف</th>
+        </tr>
+      </thead>
+      <tbody id="performanceTable"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html><style>:root {
+  --primary: #b89b7b;        /* بيج ذهبي للعناصر الرئيسية */
+  --primary-dark: #9a7e5e;   /* بيج داكن */
+  --secondary: #d6b48c;      /* بيج فاتح */
+  --danger: #c46d5e;         /* أحمر هادئ */
+  --bg-dark: #2f2a24;        /* خلفية داكنة جداً (بني غامق) */
+  --bg-card: #403a32;        /* خلفية البطاقات (بيج داكن) */
+  --text-light: #f0e7db;     /* نصوص فاتحة (بيج فاتح) */
+  --text-muted: #c9bcad;     /* نصوص ثانوية */
+  --border-dark: #5e5549;    /* حدود داكنة */
+  --shadow: 0 4px 15px rgba(0,0,0,0.4);
+  --shadow-hover: 0 10px 25px rgba(0,0,0,0.6);
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(145deg, #24201b 0%, #2f2922 100%);
+  margin: 0;
+  padding: 20px;
+  min-height: 100vh;
+  color: var(--text-light);
+}
+
+h1, h2 {
+  margin-bottom: 15px;
+  color: var(--secondary);
+  font-weight: 500;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.card, .section {
+  background: var(--bg-card);
+  padding: 25px;
+  border-radius: 16px;
+  margin: 20px auto;
+  max-width: 800px;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid var(--border-dark);
+  backdrop-filter: blur(5px);
+}
+
+.card:hover, .section:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
+  border-color: var(--primary);
+}
+
+img {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--border-dark);
+  filter: brightness(0.9);
+}
+
+a, button {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 12px 28px;
+  background: var(--primary);
+  color: var(--bg-dark);
+  text-decoration: none;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(184, 155, 123, 0.3);
+}
+
+a:hover, button:hover {
+  background: var(--secondary);
+  transform: scale(1.02);
+  box-shadow: 0 4px 8px rgba(214, 180, 140, 0.5);
+  color: var(--bg-dark);
+}
+
+form input, form select {
+  width: 100%;
+  padding: 10px 12px;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: 1px solid var(--border-dark);
+  background: var(--bg-dark);
+  color: var(--text-light);
+  font-size: 16px;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+form input:focus, form select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(184, 155, 123, 0.3);
+}
+
+form label {
+  color: var(--text-muted);
+  display: block;
+  text-align: right;
+  margin-top: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 15px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+th {
+  background: var(--primary-dark);
+  color: var(--text-light);
+  font-weight: 500;
+  padding: 12px;
+}
+
+td {
+  background: var(--bg-dark);
+  color: var(--text-light);
+  padding: 10px;
+  border-bottom: 1px solid var(--border-dark);
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+.delete {
+  background: var(--danger);
+  color: var(--bg-dark);
+  border: none;
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(196, 109, 94, 0.3);
+}
+
+.delete:hover {
+  background: #d68f7a;
+  transform: scale(1.05);
+  color: var(--bg-dark);
+}
+
+#systemSection {
+  display: none; /* مخفي في البداية */
+}
+
+.problems {
+  text-align: right;
+  direction: rtl;
+  background: #4d4238;
+  border-right: 4px solid var(--primary);
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #f0e1d2;
+}
+
+.problems ul {
+  margin: 10px 0 0;
+  padding-right: 20px;
+  list-style-type: disc;
+}</style><script>// 
+
+// الانتظار حتى تحميل الصفحة بالكامل
+document.addEventListener('DOMContentLoaded', function() {
+
+  // تعريف مصفوفات تخزين البيانات (يمكن استبدالها بقاعدة بيانات لاحقًا)
+  let employees = [];
+  let attendances = [];
+  let leaves = [];
+  let performances = [];
+
+  // دالة لتحديث عرض جدول الموظفين
+  function renderEmployees() {
+    const tbody = document.getElementById('employeeTable');
+    tbody.innerHTML = '';
+    employees.forEach((emp, index) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${emp.name}</td>
+        <td>${emp.email}</td>
+        <td><button onclick="deleteEmployee(${index})">🗑️ حذف</button></td>
+      `;
+      tbody.appendChild(row);
+    });
+  }
+
+  // دالة لتحديث عرض جدول الحضور
+  function renderAttendances() {
+    const tbody = document.getElementById('attendanceTable');
+    tbody.innerHTML = '';
+    attendances.forEach((att, index) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${att.employeeName}</td>
+        <td>${att.date}</td>
+        <td>${att.status}</td>
+        <td><button onclick="deleteAttendance(${index})">🗑️ حذف</button></td>
+      `;
+      tbody.appendChild(row);
+    });
+  }
+
+  // دالة لتحديث عرض جدول الإجازات
+  function renderLeaves() {
+    const tbody = document.getElementById('leaveTable');
+    tbody.innerHTML = '';
+    leaves.forEach((leave, index) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${leave.employeeName}</td>
+        <td>${leave.date}</td>
+        <td>${leave.type}</td>
+        <td><button onclick="deleteLeave(${index})">🗑️ حذف</button></td>
+      `;
+      tbody.appendChild(row);
+    });
+  }
+
+  // دالة لتحديث عرض جدول التقييمات
+  function renderPerformances() {
+    const tbody = document.getElementById('performanceTable');
+    tbody.innerHTML = '';
+    performances.forEach((perf, index) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${perf.employeeName}</td>
+        <td>${perf.rating}</td>
+        <td><button onclick="deletePerformance(${index})">🗑️ حذف</button></td>
+      `;
+      tbody.appendChild(row);
+    });
+  }
+
+  // إضافة موظف جديد
+  document.getElementById('employeeForm').addEventListener('submit', function(e) {
+    e.preventDefault(); // منع إعادة تحميل الصفحة
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    if (name && email) {
+      employees.push({ name, email });
+      renderEmployees();
+      this.reset(); // إعادة تعيين حقول النموذج
+    } else {
+      alert('يرجى إدخال الاسم والبريد الإلكتروني');
+    }
+  });
+
+  // إضافة سجل حضور
+  document.getElementById('attendanceForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const employeeName = document.getElementById('employeeName').value.trim();
+    const date = document.getElementById('date').value;
+    const status = document.getElementById('status').value;
+    if (employeeName && date) {
+      attendances.push({ employeeName, date, status });
+      renderAttendances();
+      this.reset();
+    } else {
+      alert('يرجى إدخال اسم الموظف والتاريخ');
+    }
+  });
+
+  // إضافة إجازة
+  document.getElementById('leaveForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const employeeName = document.getElementById('employeeNameLeave').value.trim();
+    const date = document.getElementById('leaveDate').value;
+    const type = document.getElementById('leaveType').value;
+    if (employeeName && date) {
+      leaves.push({ employeeName, date, type });
+      renderLeaves();
+      this.reset();
+    } else {
+      alert('يرجى إدخال اسم الموظف وتاريخ الإجازة');
+    }
+  });
+
+  // إضافة تقييم أداء
+  document.getElementById('performanceForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const employeeName = document.getElementById('employeeNamePerformance').value.trim();
+    const rating = document.getElementById('performanceRating').value;
+    if (employeeName) {
+      performances.push({ employeeName, rating });
+      renderPerformances();
+      this.reset();
+    } else {
+      alert('يرجى إدخال اسم الموظف');
+    }
+  });
+
+  // دوال الحذف (يجب أن تكون عامة لأنها تُنادى من الأزرار)
+  window.deleteEmployee = function(index) {
+    employees.splice(index, 1);
+    renderEmployees();
+  };
+
+  window.deleteAttendance = function(index) {
+    attendances.splice(index, 1);
+    renderAttendances();
+  };
+
+  window.deleteLeave = function(index) {
+    leaves.splice(index, 1);
+    renderLeaves();
+  };
+
+  window.deletePerformance = function(index) {
+    performances.splice(index, 1);
+    renderPerformances();
+  };
+
+  // دالة الدخول إلى النظام (إخفاء قسم الترحيب وإظهار أقسام النظام)
+  window.enterSystem = function() {
+    document.getElementById('welcomeSection').style.display = 'none';
+    document.getElementById('systemSection').style.display = 'block';
+  };
+
+  // إخفاء قسم النظام في البداية
+  document.getElementById('systemSection').style.display = 'none';
+});</script>
